@@ -1,4 +1,6 @@
-
+<p align="center">
+  <img src="assets/routesage.png" alt="RouteSage Logo" width="200"/>
+</p>
 # 🧭 RouteSage
 
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue)
