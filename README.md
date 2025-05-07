@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="assets/logo.png" alt="RouteSage Logo" width="200"/>
+  <img src="assets/routesage.png" alt="RouteSage Logo" width="200"/>
 </p>
 
 <h1 align="center">🧭 RouteSage</h1>
@@ -100,7 +100,6 @@ Creates a new item in the inventory. Accepts a JSON body with item attributes li
 | `deepseek`   | DeepSeek API        | Good reasoning and structure   |
 | `anthropic`  | Anthropic Claude API| Best at long-form clarity      |
 | `gemini`     | Google Gemini API   | Fast and multilingual          |
-| `local`      | Ollama              | Privacy-first local inference  |
 
 ---
 
@@ -128,15 +127,13 @@ cd routesage
 
 ## 📜 License
 
-MIT © [Dijo](https://github.com/yourusername)
+MIT © [Dijo](https://github.com/dijo-d)
 
 ---
 
 ## 🌐 Connect
 
-- 🐙 GitHub: [RouteSage Repo](https://github.com/yourusername/routesage)
-- 🧵 Threads: @dijo_dev
-- 💬 Feedback: [Open an Issue](https://github.com/yourusername/routesage/issues)
+- 🐙 GitHub: [RouteSage Repo](https://github.com/dijo-d/routesage)
 
 ---
 
