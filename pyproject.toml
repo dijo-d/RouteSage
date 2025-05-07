@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "routesage"
+version = "0.1.0"
+description = "LLM-powered FastAPI auto-documentation tool"
+authors = [
+    { name = "Your Name" }
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "aiohttp>=3.9.3",
+    "fastapi>=0.110.0",
+    "pydantic>=2.6.3",
+    "typing-extensions>=4.9.0",
+    "python-dotenv>=1.0.1",
+    "click>=8.1.7",
+    "rich>=13.7.0",
+    "pathspec>=0.12.1",
+    "colorama>=0.4.6",
+    "openai>=1.12.0",
+    "anthropic>=0.18.1",
+    "google-generativeai>=0.3.2",
+    "astor>=0.8.1"
+]
+
+[project.scripts]
+routesage = "routesage.cli.main:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["routesage", "routesage.cli", "routesage.core", "routesage.export", "routesage.providers", "routesage.utils"]
