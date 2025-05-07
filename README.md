@@ -127,7 +127,7 @@ cd routesage
 
 ## 📜 License
 
-MIT © [Dijo](https://github.com/dijo-d)
+MIT © [Dijo](https://github.com/dijo-d/RouteSage/blob/main/LICENSE)
 
 ---
 
