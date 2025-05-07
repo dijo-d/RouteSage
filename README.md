@@ -20,7 +20,7 @@
 
 ## 📌 What is RouteSage?
 
-**RouteSage** is a developer tool that generates **human-readable documentation** from FastAPI route definitions using **Large Language Models (LLMs)**. Whether you're building internal tools or public APIs, RouteSage saves time by explaining endpoints in plain English—automatically.
+**RouteSage** is a weekend vibe-coded developer tool that generates **human-readable documentation** from FastAPI route definitions using **Large Language Models (LLMs)**. Whether you're building internal tools or public APIs, RouteSage saves time by explaining endpoints in plain English—automatically.
 
 ---
 
