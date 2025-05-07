@@ -1,7 +1,6 @@
 
 # 🧭 RouteSage
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue)
 ![FastAPI](https://img.shields.io/badge/fastapi-async--web--framework-green)
 ![LLM-Powered](https://img.shields.io/badge/LLM-powered-orange)
@@ -13,7 +12,7 @@
 
 ## 📌 What is RouteSage?
 
-**RouteSage** is a developer tool that generates **human-readable documentation** from FastAPI route definitions using **Large Language Models (LLMs)**. Whether you're building internal tools or public APIs, RouteSage saves time by explaining endpoints in plain English—automatically.
+**RouteSage** is a vibe-coded developer tool that generates **human-readable documentation** from FastAPI route definitions using **Large Language Models (LLMs)**. Whether you're building internal tools or public APIs, RouteSage saves time by explaining endpoints in plain English—automatically.
 
 ---
 
@@ -116,17 +115,12 @@ cd routesage
 
 ---
 
-## 📜 License
-
-MIT © [Dijo](https://github.com/yourusername)
 
 ---
 
 ## 🌐 Connect
 
-- 🐙 GitHub: [RouteSage Repo](https://github.com/yourusername/routesage)
-- 🧵 Threads: @dijo_dev
-- 💬 Feedback: [Open an Issue](https://github.com/yourusername/routesage/issues)
+- 🐙 GitHub: [RouteSage Repo](https://github.com/dijo-d/routesage)
 
 ---
 
