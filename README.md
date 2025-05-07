@@ -1,6 +1,14 @@
 
-# 🧭 RouteSage
+<p align="center">
+  <img src="assets/logo.png" alt="RouteSage Logo" width="200"/>
+</p>
 
+<h1 align="center">🧭 RouteSage</h1>
+<p align="center">Auto-documentation for FastAPI using LLMs</p>
+
+---
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue)
 ![FastAPI](https://img.shields.io/badge/fastapi-async--web--framework-green)
 ![LLM-Powered](https://img.shields.io/badge/LLM-powered-orange)
@@ -12,7 +20,7 @@
 
 ## 📌 What is RouteSage?
 
-**RouteSage** is a vibe-coded developer tool that generates **human-readable documentation** from FastAPI route definitions using **Large Language Models (LLMs)**. Whether you're building internal tools or public APIs, RouteSage saves time by explaining endpoints in plain English—automatically.
+**RouteSage** is a developer tool that generates **human-readable documentation** from FastAPI route definitions using **Large Language Models (LLMs)**. Whether you're building internal tools or public APIs, RouteSage saves time by explaining endpoints in plain English—automatically.
 
 ---
 
@@ -86,10 +94,13 @@ Creates a new item in the inventory. Accepts a JSON body with item attributes li
 
 ## 🔌 Model Options
 
-| Mode       | Source         | Notes                          |
-|------------|----------------|--------------------------------|
-| `openai`   | OpenAI GPT API | Requires API key               |
-| `local`    | Ollama/Mistral | Local inference; privacy-first |
+| Mode         | Source              | Notes                          |
+|--------------|---------------------|--------------------------------|
+| `openai`     | OpenAI GPT API      | Requires API key               |
+| `deepseek`   | DeepSeek API        | Good reasoning and structure   |
+| `anthropic`  | Anthropic Claude API| Best at long-form clarity      |
+| `gemini`     | Google Gemini API   | Fast and multilingual          |
+| `local`      | Ollama              | Privacy-first local inference  |
 
 ---
 
@@ -115,12 +126,17 @@ cd routesage
 
 ---
 
+## 📜 License
+
+MIT © [Dijo](https://github.com/yourusername)
 
 ---
 
 ## 🌐 Connect
 
-- 🐙 GitHub: [RouteSage Repo](https://github.com/dijo-d/routesage)
+- 🐙 GitHub: [RouteSage Repo](https://github.com/yourusername/routesage)
+- 🧵 Threads: @dijo_dev
+- 💬 Feedback: [Open an Issue](https://github.com/yourusername/routesage/issues)
 
 ---
 
