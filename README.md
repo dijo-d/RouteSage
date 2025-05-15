@@ -89,5 +89,6 @@ Contributions welcome!
 
 ## License
 
-MIT © Dijo (dijo-d)
+[MIT © Dijo (dijo-d)](https://github.com/dijo-d/RouteSage/blob/main/LICENSE)
+
 
