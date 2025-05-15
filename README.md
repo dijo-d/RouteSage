@@ -4,137 +4,90 @@
 </p>
 
 <h1 align="center">RouteSage</h1>
-<p align="center">Auto-documentation for FastAPI using LLMs</p>
 
----
+# RouteSage
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Python](https://img.shields.io/badge/python-3.8%2B-blue)
-![FastAPI](https://img.shields.io/badge/fastapi-async--web--framework-green)
-![LLM-Powered](https://img.shields.io/badge/LLM-powered-orange)
-![CLI Tool](https://img.shields.io/badge/type-CLI--Tool-lightgrey)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/dijo-d/RouteSage)
 
-> ✨ Auto-documentation tool for your FastAPI projects using the power of LLMs.
+RouteSage is a Python CLI tool and package that automatically generates human-readable documentation for FastAPI projects. It scans your codebase using Python's AST, interprets routes, and enriches them with descriptions and tags powered by your choice of LLM provider.
 
----
+## Features
 
-## 📌 What is RouteSage?
+* **Multiple LLM Providers**: Supports OpenAI, Gemini, Anthropic, and DeepSeek.
+* **Bring Your Own Key (BYOK)**: Use any provider’s API key and models.
+* **LLM Caching**: Avoid repeated API calls by caching previous responses.
+* **Verbose Mode**: Detailed logs for debugging and insight into the generation process.
+* **Flexible Output**: Generate documentation as JSON or Markdown.
+* **AST-Based Extraction**: Leverages Python’s `ast` module for robust route introspection.
+* **Retry Mechanism**: Built-in efficient model retry logic to handle transient failures.
 
-**RouteSage** is a weekend vibe-coded developer tool that generates **human-readable documentation** from FastAPI route definitions using **Large Language Models (LLMs)**. Whether you're building internal tools or public APIs, RouteSage saves time by explaining endpoints in plain English—automatically.
+> **Note:** This is currently a Python package available via editable install and is not yet published on PyPI.
 
----
+## Installation
 
-## 🚀 Features
+1. **Clone the repository**:
 
-- 🧠 **LLM-Powered**: Uses cutting-edge LLMs for natural-language summaries.
-- ⚡ **CLI First**: Lightweight and terminal-based.
-- 📚 **Smart Parsing**: Extracts paths, methods, parameters, and descriptions from FastAPI routes.
-- 📝 **Readable Output**: Converts route data into developer-friendly documentation.
-- 🔒 **Private**: Supports local models or secure API integration.
-- 🔧 **Future-Proof**: Easy to extend to web interfaces and CI pipelines.
+   ```bash
+   git clone https://github.com/dijo-d/RouteSage.git
+   ```
+2. **Navigate to the project directory**:
 
----
+   ```bash
+   cd RouteSage
+   ```
+3. **Install in editable mode**:
 
-## 🛠️ Installation
+   ```bash
+   pip install -e ./routesage
+   ```
 
-### 📦 Option 1: Install from PyPI (coming soon)
-
-```bash
-pip install routesage
-```
-
-### 🛠️ Option 2: Clone from GitHub (recommended for development)
-
-```bash
-git clone https://github.com/yourusername/routesage.git
-cd routesage
-pip install -e .
-```
-
----
-
-## ⚙️ Usage
-
-### 🖥️ Basic CLI Usage
+## Usage
 
 ```bash
-routesage ./app/main.py
+routesage generate <FILEPATH> \
+  --provider <LLM_PROVIDER> \
+  --model <LLM_MODEL> \
+  --api-key <YOUR_API_KEY> \
+  [--output <OUTPUT_PATH>] \
+  [--format json|md] \
+  [--verbose]
 ```
 
-### 📂 With Custom Output File
+* `<FILEPATH>`: Path to your FastAPI project or Python file containing route definitions.
+* `--provider`: LLM provider to use (`openai`, `gemini`, `anthropic`, `deepseek`).
+* `--model`: Specific model name offered by the provider.
+* `--api-key`: Your API key for the chosen LLM provider.
+* `--output` (optional): File path for generated docs (default: `routes_documentation.md`).
+* `--format` (optional): Output format, either `json` or `md` (default: `md`).
+* `--verbose` (optional): Enable verbose logging.
 
-```bash
-routesage ./app/main.py --output docs/routes.md
-```
+## How It Works
 
----
+1. **Scan**: Recursively traverses Python files to locate FastAPI `app` and `APIRouter` route decorators.
+2. **Parse**: Extracts HTTP method, path, parameters, and existing docstrings via AST.
+3. **Generate**: Sends prompts to the configured LLM to produce or enhance `description` and `tags`.
+4. **Output**: Writes enriched documentation to your decorated routes or as standalone JSON/Markdown.
 
-## 📄 Example Output
+## Roadmap
 
-```markdown
-### GET /users/{user_id}
+* [ ] Publish package to PyPI.
+* [ ] HTML and Swagger UI integration.
+* [ ] Customizable prompt templates.
+* [ ] Batch processing and parallelism.
+* [ ] Additional language/framework support.
 
-Retrieves details of a specific user by their unique `user_id`. Requires authentication. Returns user profile data if found, otherwise returns 404.
+## Contributing
 
-### POST /items/
+Contributions welcome!
 
-Creates a new item in the inventory. Accepts a JSON body with item attributes like `name`, `price`, and `description`.
-```
+1. Fork the repo
+2. Create a feature branch: `git checkout -b feature/xyz`
+3. Commit changes: `git commit -m "feat: description of feature"`
+4. Push to branch: `git push origin feature/xyz`
+5. Open a Pull Request
 
----
+## License
 
-## 🧠 How It Works
+MIT © Dijo (dijo-d)
 
-1. Parses FastAPI route definitions using AST (Abstract Syntax Tree).
-2. Extracts HTTP method, path, parameters, and summary.
-3. Sends this context to a language model (OpenAI API or local).
-4. Outputs human-friendly documentation.
-
----
-
-## 🔌 Model Options
-
-| Mode         | Source              | Notes                          |
-|--------------|---------------------|--------------------------------|
-| `openai`     | OpenAI GPT API      | Requires API key               |
-| `deepseek`   | DeepSeek API        | Good reasoning and structure   |
-| `anthropic`  | Anthropic Claude API| Best at long-form clarity      |
-| `gemini`     | Google Gemini API   | Fast and multilingual          |
-
----
-
-## 📦 Roadmap
-
-- [x] CLI v1 Release
-- [ ] Web UI for interactive documentation
-- [ ] GitHub Action integration
-- [ ] SQLModel and Pydantic v2 support
-- [ ] Export to Swagger, Markdown, and PDF
-
----
-
-## 🧑‍💻 Contributing
-
-Pull requests are welcome! Feel free to fork and contribute.
-
-```bash
-git clone https://github.com/yourusername/routesage.git
-cd routesage
-# make changes and contribute 🚀
-```
-
----
-
-## 📜 License
-
-MIT © [Dijo](https://github.com/dijo-d/RouteSage/blob/main/LICENSE)
-
----
-
-## 🌐 Connect
-
-- 🐙 GitHub: [RouteSage Repo](https://github.com/dijo-d/routesage)
-
----
-
-> *“Let your routes speak for themselves.” – RouteSage*
