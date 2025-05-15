@@ -3,7 +3,7 @@
   <img src="assets/routesage.svg" alt="RouteSage Logo" width="200"/>
 </p>
 
-<h1 align="center">🧭 RouteSage</h1>
+<h1 align="center">RouteSage</h1>
 <p align="center">Auto-documentation for FastAPI using LLMs</p>
 
 ---
