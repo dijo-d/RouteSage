@@ -3,7 +3,6 @@
   <img src="assets/routesage.svg" alt="RouteSage Logo" width="200"/>
 </p>
 
-<h1 align="center">RouteSage</h1>
 
 # RouteSage
 
@@ -22,7 +21,7 @@ RouteSage is a Python CLI tool and package that automatically generates human-re
 * **AST-Based Extraction**: Leverages Python’s `ast` module for robust route introspection.
 * **Retry Mechanism**: Built-in efficient model retry logic to handle transient failures.
 
-> **Note:** This is currently a Python package available via editable install and is not yet published on PyPI.
+> **Note:** This is currently a Python package available via github repository and is not yet published on PyPI.
 
 ## Installation
 
@@ -51,7 +50,8 @@ routesage generate <FILEPATH> \
   --api-key <YOUR_API_KEY> \
   [--output <OUTPUT_PATH>] \
   [--format json|md] \
-  [--verbose]
+  [--verbose] \
+  [--help]
 ```
 
 * `<FILEPATH>`: Path to your FastAPI project or Python file containing route definitions.
@@ -61,6 +61,7 @@ routesage generate <FILEPATH> \
 * `--output` (optional): File path for generated docs (default: `routes_documentation.md`).
 * `--format` (optional): Output format, either `json` or `md` (default: `md`).
 * `--verbose` (optional): Enable verbose logging.
+* `--help` (optional): Display help message for usage.
 
 ## How It Works
 
@@ -76,10 +77,12 @@ routesage generate <FILEPATH> \
 * [ ] Customizable prompt templates.
 * [ ] Batch processing and parallelism.
 * [ ] Additional language/framework support.
+* [ ] Interactive Web UI for visualizing and generating route documentation live.
+* [ ] Secure storage of API keys using OS-native credential managers.
 
-## Contributing
+## Contributions are welcome!
 
-Contributions welcome!
+We encourage developers to contribute to RouteSage and support the broader open-source ecosystem. Whether it's bug fixes, new features, documentation improvements, or ideas, your input is valued and appreciated
 
 1. Fork the repo
 2. Create a feature branch: `git checkout -b feature/xyz`
@@ -90,5 +93,6 @@ Contributions welcome!
 ## License
 
 [MIT © Dijo (dijo-d)](https://github.com/dijo-d/RouteSage/blob/main/LICENSE)
+
 
 
