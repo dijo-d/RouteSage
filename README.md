@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="assets/routesage.png" alt="RouteSage Logo" width="200"/>
+  <img src="assets/routesage.svg" alt="RouteSage Logo" width="200"/>
 </p>
 
 <h1 align="center">🧭 RouteSage</h1>
