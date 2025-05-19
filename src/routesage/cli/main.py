@@ -12,6 +12,7 @@ import sys  # Add sys import here
 from ..core import FastAPIAnalyzer
 from ..core.llm import enhance_documentation_with_llm
 from ..export import get_exporter, list_formats
+from ..export.json_exporter import JSONExporter
 from ..export.markdown_exporter import MarkdownExporter  # Add MarkdownExporter import
 from ..providers import get_provider, list_providers
 from ..utils.logger import setup_logger, get_logger
