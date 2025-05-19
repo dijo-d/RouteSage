@@ -38,7 +38,7 @@ RouteSage is a Python CLI tool and package that automatically generates human-re
 3. **Install in editable mode**:
 
    ```bash
-   pip install -e ./routesage
+   pip install -e .
    ```
 
 ## Usage
@@ -74,8 +74,6 @@ routesage generate <FILEPATH> \
 
 * [ ] Publish package to PyPI.
 * [ ] HTML and Swagger UI integration.
-* [ ] Customizable prompt templates.
-* [ ] Batch processing and parallelism.
 * [ ] Additional language/framework support.
 * [ ] Interactive Web UI for visualizing and generating route documentation live.
 * [ ] Secure storage of API keys using OS-native credential managers.
