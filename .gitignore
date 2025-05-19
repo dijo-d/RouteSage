@@ -1,2 +1,37 @@
+# Python bytecode cache
 __pycache__/
+*.py[cod]
+*$py.class
+**/__pycache__/
+
+# Distribution / packaging
 *.egg-info/
+*.egg
+dist/
+build/
+eggs/
+.eggs/
+*.so
+*.dylib
+*.dll
+
+# Virtual environments
+env/
+venv/
+ENV/
+.env/
+.venv/
+virtualenv/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/

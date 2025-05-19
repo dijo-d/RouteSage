@@ -34,10 +34,29 @@ class FastAPIAnalyzer:
         """
         self.app_path = Path(app_path).resolve()
         
-    async def analyze(self, api_key: str, provider_name: str = "openai", model_name: Optional[str] = None) -> APIDocumentation:
+    async def analyze(self, api_key: str, provider_name: str = "openai", model_name: Optional[str] = None, 
+                 strict_verification: bool = False, min_confidence: float = 0.5) -> APIDocumentation:
         """Analyze the FastAPI application using LLM-first approach."""
         try:
-            with open(self.app_path, 'r', encoding='utf-8') as f:
+            # Check if path is a file or directory
+            if self.app_path.is_file():
+                return await self._analyze_file(self.app_path, api_key, provider_name, model_name, 
+                                               strict_verification, min_confidence)
+            elif self.app_path.is_dir():
+                return await self._analyze_directory(self.app_path, api_key, provider_name, model_name,
+                                               strict_verification, min_confidence)
+            else:
+                raise ValueError(f"Path does not exist: {self.app_path}")
+                
+        except Exception as e:
+            logger.error(f"Failed to analyze FastAPI application: {e}")
+            raise
+    
+    async def _analyze_file(self, file_path: Path, api_key: str, provider_name: str, model_name: Optional[str],
+                       strict_verification: bool = False, min_confidence: float = 0.5) -> APIDocumentation:
+        """Analyze a single FastAPI file."""
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
             # Ensure we're using the correct provider
@@ -48,33 +67,125 @@ class FastAPIAnalyzer:
                 content, 
                 api_key=api_key,
                 provider_name=provider_name,
-                model_name=model_name
+                model_name=model_name,
+                strict_verification=strict_verification
             )
             
             if llm_docs and llm_docs.routes:
-                logger.info("Successfully extracted API documentation using LLM")
+                logger.info(f"Successfully extracted API documentation from {file_path} using LLM")
+                
+                # Filter routes by confidence score
+                original_route_count = len(llm_docs.routes)
+                llm_docs.routes = [route for route in llm_docs.routes if route.confidence_score >= min_confidence]
+                filtered_count = original_route_count - len(llm_docs.routes)
+                
+                if filtered_count > 0:
+                    logger.warning(f"Filtered out {filtered_count} routes with confidence score below {min_confidence}")
                 
                 # Update the original FastAPI code with LLM-generated documentation
                 updated_content = self._update_fastapi_code(content, llm_docs)
                 
                 # Write back the updated code
-                with open(self.app_path, 'w', encoding='utf-8') as f:
+                with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(updated_content)
                 
-                logger.info("FastAPI code updated with LLM-generated documentation")
+                logger.info(f"FastAPI code updated with LLM-generated documentation in {file_path}")
                 return llm_docs
             
-            logger.warning("LLM analysis failed to find endpoints")
+            logger.warning(f"LLM analysis failed to find endpoints in {file_path}")
             return APIDocumentation(
                 title="FastAPI Application",
-                description="Failed to analyze application",
+                description=f"Failed to analyze file: {file_path}",
                 version="1.0.0",
                 routes=[]
             )
-                
         except Exception as e:
-            logger.error(f"Failed to analyze FastAPI application: {e}")
-            raise
+            logger.error(f"Failed to analyze file {file_path}: {e}")
+            return APIDocumentation(
+                title="FastAPI Application",
+                description=f"Error analyzing file: {file_path}",
+                version="1.0.0",
+                routes=[]
+            )
+    
+    async def _analyze_directory(self, directory: Path, api_key: str, provider_name: str, model_name: Optional[str],
+                           strict_verification: bool = False, min_confidence: float = 0.5) -> APIDocumentation:
+        """
+        Analyze all Python files in a directory recursively.
+        
+        Args:
+            directory: Directory path
+            api_key: API key for LLM provider
+            provider_name: Name of the LLM provider
+            model_name: Name of the model to use
+            strict_verification: Whether to use strict verification
+            min_confidence: Minimum confidence score for routes
+            
+        Returns:
+            Consolidated API documentation object
+        """
+        logger.info(f"Analyzing FastAPI project directory: {directory}")
+        
+        # Initialize consolidated documentation
+        consolidated_docs = APIDocumentation(
+            title="FastAPI Project",
+            description="Consolidated API documentation",
+            version="1.0.0",
+            routes=[],
+            tags={}
+        )
+        
+        # Track files analyzed for logging
+        files_analyzed = 0
+        files_with_routes = 0
+        
+        # Walk through the directory and process Python files
+        for root, _, files in os.walk(directory):
+            for file in files:
+                if file.endswith(".py"):
+                    file_path = Path(root) / file
+                    try:
+                        # Skip __pycache__ directories
+                        if "__pycache__" in str(file_path):
+                            continue
+                            
+                        logger.info(f"Analyzing file: {file_path}")
+                        file_docs = await self._analyze_file(
+                            file_path, 
+                            api_key, 
+                            provider_name, 
+                            model_name,
+                            strict_verification,
+                            min_confidence
+                        )
+                        files_analyzed += 1
+                        
+                        if file_docs.routes:
+                            files_with_routes += 1
+                            
+                            # Add source file information to routes
+                            for route in file_docs.routes:
+                                route.source_file = str(file_path.relative_to(directory))
+                                consolidated_docs.routes.append(route)
+                            
+                            # Update tags
+                            consolidated_docs.tags.update(file_docs.tags)
+                            
+                            # If this looks like the main app file, use its metadata
+                            if "app" in file.lower() or "main" in file.lower():
+                                if file_docs.title != "FastAPI Application":
+                                    consolidated_docs.title = file_docs.title
+                                if file_docs.description:
+                                    consolidated_docs.description = file_docs.description
+                                if file_docs.version != "1.0.0":
+                                    consolidated_docs.version = file_docs.version
+                    except Exception as e:
+                        logger.error(f"Error analyzing file {file_path}: {e}")
+        
+        logger.info(f"Project analysis complete. Analyzed {files_analyzed} files, found routes in {files_with_routes} files.")
+        logger.info(f"Total routes found: {len(consolidated_docs.routes)}")
+        
+        return consolidated_docs
 
     def _update_fastapi_code(self, content: str, docs: APIDocumentation) -> str:
         """Update FastAPI code with LLM-generated documentation."""
