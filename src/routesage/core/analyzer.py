@@ -130,7 +130,7 @@ class FastAPIAnalyzer:
         consolidated_docs = APIDocumentation(
             title="FastAPI Project",
             description="Consolidated API documentation",
-            version="1.0.0",
+            version="1.0.1",
             routes=[],
             tags={}
         )
