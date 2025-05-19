@@ -41,6 +41,8 @@ class RouteInfo(BaseModel):
     deprecated: bool = False
     source_file: Optional[str] = None
     line_number: Optional[int] = None
+    confidence_score: float = 1.0  # Default to highest confidence
+    verified: bool = False  # Flag to indicate if route has been verified
 
 
 class APIDocumentation(BaseModel):

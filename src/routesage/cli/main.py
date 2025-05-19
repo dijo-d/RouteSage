@@ -8,9 +8,11 @@ from rich.table import Table
 from pathlib import Path
 from typing import Optional
 import asyncio
+import sys  # Add sys import here
 from ..core import FastAPIAnalyzer
 from ..core.llm import enhance_documentation_with_llm
 from ..export import get_exporter, list_formats
+from ..export.markdown_exporter import MarkdownExporter  # Add MarkdownExporter import
 from ..providers import get_provider, list_providers
 from ..utils.logger import setup_logger, get_logger
 
@@ -91,8 +93,11 @@ def cli():
 @click.option('--api-key', required=True, help='API key for the LLM provider')
 @click.option('--no-cache', is_flag=True, help='Disable LLM response caching')
 @click.option('--verbose', '-v', is_flag=True, help='Enable verbose logging')
+@click.option('--strict-verification', is_flag=True, help='Enable strict verification of routes')
+@click.option('--min-confidence', type=float, default=0.5, help='Minimum confidence score for routes (0.0-1.0)')
 def generate(app_path: str, output: str, format: str, provider: str, 
-            model: str, api_key: str, no_cache: bool, verbose: bool):
+            model: str, api_key: str, no_cache: bool, verbose: bool,
+            strict_verification: bool, min_confidence: float):
     try:
         # Configure logging based on verbosity
         if verbose:
@@ -104,11 +109,13 @@ def generate(app_path: str, output: str, format: str, provider: str,
             analyzer = FastAPIAnalyzer(app_path)
             logger.debug("FastAPI analyzer initialized")
             
-            # Pass both provider and model to analyze method
+            # Pass both provider and model to analyze method along with verification flag
             docs = asyncio.run(analyzer.analyze(
                 api_key=api_key,
-                provider_name=provider,  # Pass the provider name
-                model_name=model        # Pass the model name
+                provider_name=provider,
+                model_name=model,
+                strict_verification=strict_verification,
+                min_confidence=min_confidence
             ))
             logger.info("Documentation extracted successfully")
             
@@ -157,6 +164,79 @@ def generate(app_path: str, output: str, format: str, provider: str,
         if verbose:
             logger.exception("Detailed error information:")
         raise click.Abort()
+
+@cli.command()
+@click.argument('path', type=click.Path(exists=True))
+@click.option('--api-key', envvar='ROUTESAGE_API_KEY', help='API key for the LLM provider')
+@click.option('--provider', default='openai', help='LLM provider to use')
+@click.option('--model', help='Specific model to use (provider-dependent)')
+@click.option('--format', 'export_format', default='markdown', help='Export format (markdown, json)')
+@click.option('--output-dir', default='./docs', help='Output directory for documentation')
+@click.option('--no-update', is_flag=True, help='Do not update the original code with documentation')
+def generate(path, api_key, provider, model, export_format, output_dir, no_update):
+    """Generate API documentation from a FastAPI file or project directory."""
+    if not api_key:
+        console.print("[bold red]Error:[/bold red] API key is required. Set ROUTESAGE_API_KEY environment variable or use --api-key option.")
+        return
+    
+    try:
+        path_obj = Path(path)
+        if path_obj.is_file():
+            console.print(f"[bold]Analyzing FastAPI file:[/bold] {path}")
+        elif path_obj.is_dir():
+            console.print(f"[bold]Analyzing FastAPI project directory:[/bold] {path}")
+        else:
+            console.print(f"[bold red]Error:[/bold red] Path {path} is neither a file nor a directory.")
+            return
+            
+        # Initialize analyzer
+        analyzer = FastAPIAnalyzer(path)
+        
+        with console.status(f"[bold green]Analyzing FastAPI application with {provider}...[/bold green]"):
+            # Analyze the application - run the async function with asyncio
+            import asyncio
+            docs = asyncio.run(analyzer.analyze(api_key, provider, model))
+        
+        # Export documentation
+        if export_format.lower() == 'json':
+            exporter = JSONExporter(output_dir)
+        else:
+            exporter = MarkdownExporter(output_dir)
+            
+        output_file = exporter.export(docs)
+        
+        console.print(f"[bold green]Documentation generated successfully![/bold green]")
+        console.print(f"Output file: [bold]{output_file}[/bold]")
+        
+        # Print summary
+        console.print("\n[bold]API Documentation Summary:[/bold]")
+        console.print(f"Title: {docs.title}")
+        if docs.description:
+            console.print(f"Description: {docs.description}")
+        console.print(f"Version: {docs.version}")
+        console.print(f"Total routes: {len(docs.routes)}")
+        
+        # Group routes by tags for display
+        routes_by_tag = {}
+        for route in docs.routes:
+            tag = route.tags[0] if route.tags else "Other"
+            if tag not in routes_by_tag:
+                routes_by_tag[tag] = []
+            routes_by_tag[tag].append(route)
+        
+        # Display routes by tag
+        for tag, routes in routes_by_tag.items():
+            console.print(f"\n[bold cyan]{tag}[/bold cyan] ({len(routes)} routes)")
+            for route in routes:
+                methods = ", ".join(route.methods)
+                console.print(f"  [magenta]{methods}[/magenta] {route.path}")
+                if route.source_file:
+                    console.print(f"    Source: {route.source_file}")
+    
+    except Exception as e:
+        console.print(f"[bold red]Error:[/bold red] {str(e)}")
+        if "--debug" in sys.argv:
+            console.print_exception()
 
 def main():
     """Main entry point for the CLI."""
