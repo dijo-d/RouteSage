@@ -7,7 +7,7 @@
 # RouteSage
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/dijo-d/RouteSage)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/dijo-d/RouteSage)
 
 RouteSage is a Python CLI tool and package that automatically generates human-readable documentation for FastAPI projects. It scans your codebase using Python's AST, interprets routes, and enriches them with descriptions and tags powered by your choice of LLM provider.
 
