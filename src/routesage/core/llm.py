@@ -236,8 +236,9 @@ Return the documentation in this JSON format:
         return docs
 
     except Exception as e:
-        logger.error(f"LLM analysis failed: {e}")
-        return None
+        logger.error(f"LLM analysis failed: {str(e)}")
+        # Re-raise the exception to ensure it's properly handled upstream
+        raise
 
 def extract_routes_with_ast(code: str) -> Set[str]:
     """Extract FastAPI routes from code using AST parsing."""

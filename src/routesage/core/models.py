@@ -49,6 +49,6 @@ class APIDocumentation(BaseModel):
     """Complete API documentation."""
     title: str
     description: Optional[str] = None
-    version: str = "1.0.1"
+    version: str = "1.0.0"
     routes: List[RouteInfo] = Field(default_factory=list)
     tags: Dict[str, str] = Field(default_factory=dict)
