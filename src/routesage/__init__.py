@@ -6,4 +6,4 @@ This package provides tools for automatically generating
 and enhancing API documentation for FastAPI applications.
 """
 
-__version__ = "1.0.1.1"
+__version__ = "1.0.2"

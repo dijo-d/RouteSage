@@ -80,17 +80,94 @@ class RichGroup(click.Group):
   [magenta]routesage list-providers[/magenta]
 """)
 
-@click.group(cls=RichGroup)
+# Update the CLI group with better description
+@click.group()
 def cli():
-    """RouteSage: LLM-powered FastAPI documentation tool."""
+    """
+    RouteSage: Intelligent FastAPI Documentation Generator
+    
+    RouteSage uses AI to analyze your FastAPI applications and generate
+    comprehensive documentation automatically.
+    """
     pass
 
+# Add a new command to list available providers and models
+@cli.command()
+def providers():
+    """List all available LLM providers and their supported models."""
+    console = Console()
+    
+    console.print("\n[bold blue]Available LLM Providers and Models[/bold blue]\n")
+    console.print("[italic]Note: If no model is specified, the default model will be used.[/italic]\n")
+    
+    table = Table(show_header=True, header_style="bold")
+    table.add_column("Provider", style="cyan")
+    table.add_column("Default Model", style="green")
+    table.add_column("Supported Models", style="yellow")
+    
+    # OpenAI
+    table.add_row(
+        "openai", 
+        "gpt-3.5-turbo",
+        ", ".join(["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo-preview"])
+    )
+    
+    # Anthropic
+    table.add_row(
+        "anthropic", 
+        "claude-3-opus",
+        ", ".join(["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"])
+    )
+    
+    # Gemini
+    table.add_row(
+        "gemini", 
+        "gemini-pro",
+        ", ".join(["gemini-pro", "gemini-2.0-flash"])
+    )
+    
+    # DeepSeek
+    table.add_row(
+        "deepseek", 
+        "deepseek-chat",
+        ", ".join(["deepseek-chat", "deepseek-coder"])
+    )
+    
+    console.print(table)
+    console.print("\n")
+
+# Add a help command to show examples
+@cli.command()
+def examples():
+    """Show usage examples for RouteSage commands."""
+    console = Console()
+    
+    console.print("\n[bold blue]RouteSage Usage Examples[/bold blue]\n")
+    
+    # Generate command examples
+    console.print("[bold cyan]Generate Documentation:[/bold cyan]")
+    console.print("  routesage generate ./my_fastapi_app --api-key YOUR_API_KEY")
+    console.print("  routesage generate ./my_fastapi_app --provider openai --api-key YOUR_API_KEY  # Uses default model (gpt-3.5-turbo)")
+    console.print("  routesage generate ./my_fastapi_app --provider openai --model gpt-4 --api-key YOUR_API_KEY")
+    console.print("  routesage generate ./my_fastapi_app --output ./docs --format markdown --api-key YOUR_API_KEY")
+    
+    # List providers example
+    console.print("\n[bold cyan]List Available Providers:[/bold cyan]")
+    console.print("  routesage providers")
+    
+    # Show examples
+    console.print("\n[bold cyan]Show These Examples:[/bold cyan]")
+    console.print("  routesage examples")
+    
+    console.print("\n")
+
+# Update the generate command with better help text
 @cli.command()
 @click.argument('app_path', type=click.Path(exists=True))
 @click.option('--output', '-o', default='./docs', help='Output directory for documentation')
 @click.option('--format', '-f', default='markdown', help='Output format (markdown, json)')
 @click.option('--provider', '-p', default='openai', help='LLM provider (openai, anthropic, gemini, deepseek)')
-@click.option('--model', '-m', help='Model name for the selected provider')
+@click.option('--model', '-m', help='Model name for the selected provider (use "routesage providers" to see options)')
 @click.option('--api-key', required=True, help='API key for the LLM provider')
 @click.option('--no-cache', is_flag=True, help='Disable LLM response caching')
 @click.option('--verbose', '-v', is_flag=True, help='Enable verbose logging')
@@ -99,6 +176,15 @@ def cli():
 def generate(app_path: str, output: str, format: str, provider: str, 
             model: str, api_key: str, no_cache: bool, verbose: bool,
             strict_verification: bool, min_confidence: float):
+    """
+    Generate documentation for a FastAPI application.
+    
+    APP_PATH is the path to your FastAPI application file or directory.
+    
+    Examples:
+        routesage generate ./my_fastapi_app --api-key YOUR_API_KEY
+        routesage generate ./app.py --provider anthropic --model claude-3-opus --api-key YOUR_API_KEY
+    """
     try:
         # Configure logging based on verbosity
         if verbose:
